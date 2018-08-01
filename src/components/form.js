@@ -1,6 +1,9 @@
 import React from 'react';
-import { reduxForm, Field } from 'redux-form';
+import { reduxForm, Field} from 'redux-form';
+
+
 import Input from './input';
+//import { required } from './validators';
 
 export class Form extends React.Component {
   onSubmit(values) {
@@ -15,29 +18,38 @@ export class Form extends React.Component {
           onSubmit={this.props.handleSubmit(values =>
             this.onSubmit(values)
           )}>
-          <label htmlFor='number-input'>Tracking Number</label>
           <Field
-            name="number-input"
+            name="trackingNumber"
             id="number-input"
             element="input"
             type="text"
             component={Input}
+            label="Tracking Number"
+            //validate={required}
           />
-          <label htmlFor='issue-dropdown'>What is your issue?</label>
           <Field
-            name="issue-dropdown"
+            name="issue"
             id="issue-dropdown"
             element="select"
             component={Input}
-          />
-          
-          <label htmlFor='detail-input'>Give more details (optional)</label>
+            label="What is your issue?"
+            //validate=""
+          >
+            <option value="not-delivered">My delivery hasn't arrived</option>
+            <option value="wrong-item">The wrong item was delivered</option>
+            <option value="missing-part">Part of my order was missing</option>
+            <option value="damaged">Some of my order was damaged</option>
+            <option value="other">Other (give details below)</option>
+          </Field>
+
           <Field
-            name="detail-input"
+            name="details"
             id="detail-input"
             element="textarea"
             component={Input}
-          />    
+            label="Give more details (optional)"
+            //validate=""
+          />
           <button>Submit</button>
         </form>
       </main>

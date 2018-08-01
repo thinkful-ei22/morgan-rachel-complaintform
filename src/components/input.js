@@ -2,28 +2,29 @@ import React from 'react';
 
 export default class Input extends React.Component {
 
-  render(props) {
-    const Element = this.props.element;
-
-
-
-    if (Element === 'select') {
-      return (
-        <select>
-          <option value="not-delivered">My delivery hasn't arrived</option>
-          <option value="wrong-item">The wrong item was delivered</option>
-          <option value="missing-part">Part of my order was missing</option>
-          <option value="damaged">Some of my order was damaged</option>
-          <option value="other">Other (give details below)</option>
-        </select>
-      )
+  componentDidUpdate(prevProps) {
+    if (!prevProps.meta.active && this.props.meta.active) {
+      this.input.focus();
     }
-    return (
-      <Element
-        id={this.props.id}
-        
-      />
-    )
   }
 
+  render() {
+    const Element = this.props.element || 'input';
+
+    return (
+      <div>
+        <label htmlFor={this.props.input.name}>
+          {this.props.label}
+        </label>
+
+        <Element
+          {...this.props.input}
+          id={this.props.name}
+          type={this.props.type}
+          ref={input => (this.input = input)}>
+        {this.props.children}
+        </Element>
+      </div>
+    );
+  }
 }
