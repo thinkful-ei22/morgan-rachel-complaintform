@@ -8,13 +8,14 @@ import { required, nonEmpty, inputLength, mustBeNumber } from '../validators';
 export class Form extends React.Component {
   onSubmit(values) {
     console.log('REQUEST',values);
-    fetch('https://us-central1-delivery-form-api.cloudfunctions.net/api/report', {
+    return fetch('https://us-central1-delivery-form-api.cloudfunctions.net/api/report', {
       method: "POST",
       body: JSON.stringify(values),
       headers: {'content-type': 'application/json'}
     })
     .then(response => {
       if(!response.ok){
+        console.log('ORIGINAL ERROR', response);
         if(
           response.headers.has('content-type') &&
           response.headers.get('content-type').startsWith('application/json')
@@ -34,6 +35,8 @@ export class Form extends React.Component {
     })
     .then( () => console.log('Submitted with values: ', values))
     .catch(err => {
+      console.log('ERR  ',err);
+
       const {reason, message, location} = err;
       if (reason === 'ValidationError') {
           // Convert ValidationErrors into SubmissionErrors for Redux Form
@@ -44,10 +47,10 @@ export class Form extends React.Component {
           );
       }
       return Promise.reject(
-          new SubmissionError({
+        new SubmissionError({
               _error: 'Error submitting message'
           })
-      );
+        )
     });
   }
 
@@ -72,8 +75,9 @@ export class Form extends React.Component {
     return (
       <main>
         <h1>Report a problem with your delivery</h1>
-        {successMessage}
-        {errorMessage}
+        <h2>{successMessage}
+            {errorMessage}
+        </h2>
         <form
           onSubmit={this.props.handleSubmit(values =>
             this.onSubmit(values)
@@ -119,6 +123,6 @@ export class Form extends React.Component {
 
 export default reduxForm({
   form: "complaint",
-  // onSubmitFail: (errors, dispatch) =>
-  //       dispatch(focus('complaint', Object.keys(errors)[0]))
+  onSubmitFail: (errors, dispatch) => 
+    dispatch(focus('complaint', Object.keys(errors)[0]))
 })(Form);
