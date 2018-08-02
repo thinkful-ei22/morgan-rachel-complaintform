@@ -1,5 +1,5 @@
 import React from 'react';
-import { reduxForm, SubmissionError, Field} from 'redux-form';
+import { reduxForm, SubmissionError, Field, focus} from 'redux-form';
 
 
 import Input from './input';
@@ -118,5 +118,7 @@ export class Form extends React.Component {
 }
 
 export default reduxForm({
-  form: "complaint"
+  form: "complaint",
+  // onSubmitFail: (errors, dispatch) =>
+  //       dispatch(focus('complaint', Object.keys(errors)[0]))
 })(Form);
